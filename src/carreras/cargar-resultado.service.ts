@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { AuditoriaService } from '../../audit/services/auditoria.service';
-import { RequestContextService } from '../../audit/services/request-context.service';
+import { AuditoriaService } from '../audit/services/auditoria.service';
+import { RequestContextService } from '../audit/services/request-context.service';
 
 interface CargarResultadoDto {
   idInscripcion: string;

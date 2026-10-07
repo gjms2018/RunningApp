@@ -39,7 +39,7 @@ export class InscripcionesService {
       direccionIp,
       userAgent,
       corredoresGestionados,
-    } = this.requestContext.get();
+    } = this.requestContext.getAutenticado();
 
     // Determina a nombre de quién se crea la inscripción, y valida
     // autoridad si el actor está gestionando a un menor distinto de sí

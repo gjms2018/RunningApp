@@ -1,7 +1,8 @@
 import { Body, Controller, Ip, Headers, Post } from '@nestjs/common';
-import { Public } from '../decorators/public.decorator';
-import { AuthService } from '../services/auth.service';
-import { RecuperacionPasswordService } from '../services/recuperacion-password.service';
+import { Public } from './decorators/public.decorator';
+import { AuthService } from './services/auth.service';
+import { RecuperacionPasswordService } from './services/recuperacion-password.service';
+
 
 class LoginBodyDto {
   email: string;

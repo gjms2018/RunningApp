@@ -17,7 +17,7 @@ interface LoginDto {
   userAgent?: string;
 }
 
-interface TokensRespuesta {
+export interface TokensRespuesta {
   accessToken: string;
   refreshToken: string;
 }
@@ -44,7 +44,7 @@ export class AuthService {
     // Mismo criterio de mensaje neutro que usamos en recuperación de
     // contraseña: no revelar si el fallo fue por email inexistente o
     // contraseña incorrecta.
-    if (!usuario) {
+    if (!usuario || !usuario.email) {
       await this.registrarIntentoFallido(dto, null);
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -53,7 +53,10 @@ export class AuthService {
     // bloqueado, no tiene sentido gastar un bcrypt.compare (que es
     // intencionalmente costoso en CPU) ni sumar otro intento fallido.
     await this.verificarNoBloqueado(usuario.idUsuario, dto);
-
+if (!usuario.passwordHash || !usuario.email) {
+  await this.registrarIntentoFallido(dto, usuario.idUsuario);
+  throw new UnauthorizedException('Credenciales inválidas');
+}
     const passwordValida = await bcrypt.compare(
       dto.password,
       usuario.passwordHash,
@@ -89,10 +92,10 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token inválido o expirado');
     }
 
-    const usuario = await this.usuariosRepo.findOne({ where: { idUsuario } });
-    if (!usuario) {
-      throw new UnauthorizedException('Usuario ya no existe');
-    }
+const usuario = await this.usuariosRepo.findOne({ where: { idUsuario } });
+if (!usuario || !usuario.email) {
+  throw new UnauthorizedException('Usuario ya no existe o no tiene acceso');
+}
 
     const payload = await this.construirPayload(usuario.idUsuario, usuario.email);
     return this.emitirTokens(payload);

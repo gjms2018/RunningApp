@@ -4,6 +4,7 @@
  * "Corredor" no aparece aquí: es la condición implícita de cualquier
  * usuario autenticado.
  */
+import { Request } from 'express';
 export interface JwtPayload {
   idUsuario: string;
   email: string;

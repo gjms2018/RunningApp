@@ -40,9 +40,9 @@ export class RecuperacionPasswordService {
 
     // Nótese: no se lanza excepción ni se distingue la respuesta.
     // Si no existe, simplemente no se genera token ni se envía correo.
-    if (!usuario) {
-      return;
-    }
+if (!usuario || !usuario.email) {
+  return;
+}
 
     // El token que viaja por correo es el valor en claro; en la base
     // de datos solo se guarda su hash — igual que una contraseña. Así,

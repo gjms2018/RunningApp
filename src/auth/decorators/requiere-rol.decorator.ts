@@ -1,4 +1,4 @@
-import { SetMetadata } from '@nestjs/common';
+import { applyDecorators, SetMetadata } from '@nestjs/common';
 
 export type TipoRol = 'representante_equipo' | 'organizador' | 'patrocinador';
 
@@ -40,8 +40,7 @@ export const ALCANCE_KEY = 'alcanceMetadata';
  * no basta con "ser organizador de alguna carrera".
  */
 export const RequiereRol = (tipoRol: TipoRol, alcance: AlcanceMetadata) =>
-  function (target: any, key?: string, descriptor?: PropertyDescriptor) {
-    SetMetadata(ROLES_KEY, tipoRol)(target, key, descriptor);
-    SetMetadata(ALCANCE_KEY, alcance)(target, key, descriptor);
-    return descriptor;
-  };
+  applyDecorators(
+    SetMetadata(ROLES_KEY, tipoRol),
+    SetMetadata(ALCANCE_KEY, alcance),
+  );

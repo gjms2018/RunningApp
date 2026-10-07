@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, Scope, UnauthorizedException } from '@nestjs/common';
 
 export interface ContextoRequest {
   // null en rutas @Public() (login, registro, recuperación de
@@ -18,6 +18,10 @@ export interface ContextoRequest {
    */
   corredoresGestionados: string[];
 }
+
+// Mismo contexto, pero con el actor garantizado
+export type ContextoAutenticado = ContextoRequest & { idUsuario: string };
+
 
 /**
  * Request-scoped: NestJS crea una instancia nueva por cada petición HTTP.
@@ -39,4 +43,18 @@ export class RequestContextService {
     }
     return this.contexto;
   }
+
+/**
+   * Para servicios de rutas protegidas: falla si no hay actor
+   * autenticado, y devuelve idUsuario tipado como string.
+   */
+  getAutenticado(): ContextoAutenticado {
+    const ctx = this.get();
+    if (!ctx.idUsuario) {
+      throw new UnauthorizedException('Se requiere un usuario autenticado');
+    }
+    return { ...ctx, idUsuario: ctx.idUsuario };
+  }
+
+
 }

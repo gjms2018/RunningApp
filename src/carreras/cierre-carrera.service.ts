@@ -28,7 +28,7 @@ export class CierreCarreraService {
   ) {}
 
   async finalizar(dto: FinalizarCarreraDto): Promise<void> {
-    const { idUsuario, direccionIp, userAgent } = this.requestContext.get();
+    const { idUsuario, direccionIp, userAgent } = this.requestContext.getAutenticado();
 
     await this.dataSource.transaction(async (manager) => {
       const carrera = await this.bloquearYValidarCarrera(manager, dto.idCarrera);
